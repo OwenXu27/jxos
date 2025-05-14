@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Chicago';
+  src: url('/fonts/chicago-12-1.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Chicago', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  background: #bebebe;
+  -webkit-font-smoothing: antialiased;
+  font-smooth: always;
+  color: #222;
+}
+
+h1 {
+  font-size: 2rem;      /* 32px */
+  font-weight: 700;
+  margin-bottom: 0.5em;
+}
+
+h2 {
+  font-size: 1.5rem;    /* 24px */
+  font-weight: 600;
+  margin-bottom: 0.5em;
+}
+
+h3 {
+  font-size: 1.25rem;   /* 20px */
+  font-weight: 600;
+  margin-bottom: 0.5em;
+}
+
+button, .menu-bar, .menu-item {
+  font-size: 1rem;      /* 16px */
+  font-weight: 500;
+}
+
+small, .label, .caption {
+  font-size: 0.875rem;  /* 14px */
+}
+
+/* CRT 效果 */
+.crt-effect::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  animation: scanline 10s linear infinite;
+  z-index: 9999;
+}
+
+@keyframes scanline {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100%; }
+} 
