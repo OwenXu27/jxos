@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "bunx vite",
     "build": "bunx vite build",
-    "preview": "bunx vite preview"
+    "preview": "bunx vite preview",
+    "predeploy": "bun run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "latest",
@@ -19,9 +21,11 @@
     "zustand": "latest"
   },
   "devDependencies": {
+    "@types/node": "^22.15.18",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "autoprefixer": "latest",
+    "gh-pages": "^6.3.0",
     "postcss": "latest",
     "tailwindcss": "3.3.5",
     "vite": "latest"

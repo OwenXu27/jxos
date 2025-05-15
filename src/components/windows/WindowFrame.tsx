@@ -30,7 +30,7 @@ const WindowFrame: React.FC<WindowFrameProps> = ({ id, title, x, y, zIndex, coll
     startXPos: number;
     startYPos: number;
   }>(null);
-  const minWidth = 200;
+  const minWidth = 100;
   const minHeight = 100;
 
   const buttonBase =
@@ -40,11 +40,14 @@ const WindowFrame: React.FC<WindowFrameProps> = ({ id, title, x, y, zIndex, coll
 
   // 鼠标按下标题栏
   const onMouseDown = (e: React.MouseEvent) => {
-    if (collapsed) return;
+    // 允许收起状态下也能拖动
+    let offsetX = e.clientX - x;
+    if (offsetX > size.width / 2) offsetX = size.width / 2;
+    const offsetY = Math.max(0, Math.min(e.clientY - y, 31));
     dragging.current = true;
     offset.current = {
-      x: e.clientX - x,
-      y: e.clientY - y,
+      x: offsetX,
+      y: offsetY,
     };
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
@@ -54,7 +57,12 @@ const WindowFrame: React.FC<WindowFrameProps> = ({ id, title, x, y, zIndex, coll
   // 鼠标移动
   const onMouseMove = (e: MouseEvent) => {
     if (dragging.current) {
-      onMove(id, e.clientX - offset.current.x, e.clientY - offset.current.y);
+      // 限制窗口拖动不超出屏幕边界
+      const maxX = window.innerWidth - size.width;
+      const maxY = window.innerHeight - size.height;
+      let newX = Math.min(Math.max(e.clientX - offset.current.x, 0), maxX);
+      let newY = Math.min(Math.max(e.clientY - offset.current.y, 0), maxY);
+      onMove(id, newX, newY);
     } else if (resizing.current) {
       const { dir, startX, startY, startW, startH, startXPos, startYPos } = resizing.current;
       let newW = startW;
@@ -108,15 +116,6 @@ const WindowFrame: React.FC<WindowFrameProps> = ({ id, title, x, y, zIndex, coll
     onFocus(id);
   };
 
-  // 点击标题栏收起/还原
-  const handleTitleBarClick = () => {
-    if (collapsed) {
-      onExpand(id);
-    } else {
-      onFocus(id);
-    }
-  };
-
   return (
     <div
       className="absolute min-h-[32px] bg-white border-2 border-black shadow-lg rounded-sm select-none"
@@ -142,9 +141,8 @@ const WindowFrame: React.FC<WindowFrameProps> = ({ id, title, x, y, zIndex, coll
       <div onMouseDown={onResizeMouseDown('se')} className="absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize z-20" />
       <div onMouseDown={onResizeMouseDown('sw')} className="absolute bottom-0 left-0 w-4 h-4 cursor-nesw-resize z-20" />
       <div
-        className="flex items-center h-8 px-2 bg-[#e0e0e0] border-b-2 border-black cursor-pointer"
+        className="flex items-center h-8 px-2 bg-[#e0e0e0] border-b-2 border-black cursor-pointer min-w-[100px]"
         onMouseDown={onMouseDown}
-        onClick={handleTitleBarClick}
         style={{ userSelect: "none" }}
       >
         {/* 收起/还原按钮 */}

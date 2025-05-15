@@ -81,7 +81,6 @@ const Taskbar: React.FC = () => {
 
   // 点击下拉菜单项
   const handleDropdownClick = (item: any) => {
-    console.log('addWindow', item);
     if (item.action === "about") {
       addWindow({
         id: `about-${Date.now()}`,
